@@ -27,6 +27,15 @@ export class ArticlesController {
     return this.articlesService.findAll();
   }
 
+  @Get("latest")
+async findAlllatest(
+  @Query('limit') limit: number,
+  @Query('status') status: string,
+  @Query('sort') sort: string,
+) {
+  return await this.articlesService.findAllLatestArticle({ limit, status, sort });
+}
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.articlesService.findOne(id);
@@ -60,14 +69,7 @@ export class ArticlesController {
     return this.articlesService.findFeatured(language);
   }
 
-  @Get()
-async findAlllatest(
-  @Query('limit') limit: number,
-  @Query('status') status: string,
-  @Query('sort') sort: string,
-) {
-  return this.articlesService.findAllLatestArticle({ limit, status, sort });
-}
+
 
 
   @Get('breaking/:language')

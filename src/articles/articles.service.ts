@@ -101,7 +101,7 @@ export class ArticlesService {
   
     const sortOptions: { [key: string]: 1 | -1 } = sort ? { [sort.replace('-', '') as string]: sort.startsWith('-') ? -1 : 1 } : {};
   
-    return this.articleModel
+    return await this.articleModel
       .find(query)
       .sort(sortOptions)
       .limit(Number(limit) || 10)
