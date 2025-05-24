@@ -2,6 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Article } from './schema/articles.schema';
+
+interface FindAllOptions {
+  limit?: number;
+  status?: string;
+  sort?: string;
+}
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 
@@ -86,6 +92,22 @@ export class ArticlesService {
       .populate('authorId')
       .exec();
   }
+
+  async findAllLatestArticle({})
+
+  async findAllLatestArticle({ limit, status, sort }: FindAllOptions) {
+    const query: any = {};
+    if (status) query.status = status;
+  
+    const sortOptions: { [key: string]: 1 | -1 } = sort ? { [sort.replace('-', '') as string]: sort.startsWith('-') ? -1 : 1 } : {};
+  
+    return this.articleModel
+      .find(query)
+      .sort(sortOptions)
+      .limit(Number(limit) || 10)
+      .lean();
+  }
+  
 
   async findBreakingNews(language: string): Promise<Article[]> {
     return this.articleModel

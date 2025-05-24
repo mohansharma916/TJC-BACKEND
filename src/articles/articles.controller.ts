@@ -60,6 +60,16 @@ export class ArticlesController {
     return this.articlesService.findFeatured(language);
   }
 
+  @Get()
+async findAlllatest(
+  @Query('limit') limit: number,
+  @Query('status') status: string,
+  @Query('sort') sort: string,
+) {
+  return this.articlesService.findAllLatestArticle({ limit, status, sort });
+}
+
+
   @Get('breaking/:language')
   findBreakingNews(@Param('language') language: string) {
     return this.articlesService.findBreakingNews(language);
