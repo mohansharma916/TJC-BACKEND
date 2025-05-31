@@ -36,6 +36,18 @@ export class UsersService {
   async findByEmail(email: string): Promise<User | null> {
     return this.userModel.findOne({ email }).exec();
   }
+
+
+
+  async findByUsernameOrEmail(usernameOrEmail: string) {
+    return await  this.userModel.findOne({
+      $or: [
+        { username: usernameOrEmail },
+        { email: usernameOrEmail }
+      ]
+    }).exec();
+  }
+
   async update(id: string, updateUserDto: UpdateUserDto): Promise<User | null> {
     const updateData: any = { ...updateUserDto };
     

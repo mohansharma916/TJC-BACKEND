@@ -18,8 +18,8 @@ export class ArticlesController {
   constructor(private readonly articlesService: ArticlesService) {}
 
   @Post()
-  create(@Body() createArticleDto: CreateArticleDto) {
-    return this.articlesService.create(createArticleDto);
+ async create(@Body() createArticleDto: CreateArticleDto) {
+    return await this.articlesService.create(createArticleDto);
   }
 
   @Get()
@@ -38,6 +38,7 @@ async findAlllatest(
 
   @Get(':id')
   findOne(@Param('id') id: string) {
+   
     return this.articlesService.findOne(id);
   }
 
@@ -49,7 +50,7 @@ async findAlllatest(
     return this.articlesService.findBySlug(slug, language);
   }
 
-  @Patch(':id')
+  @Put(':id')
   update(@Param('id') id: string, @Body() updateArticleDto: UpdateArticleDto) {
     return this.articlesService.update(id, updateArticleDto);
   }

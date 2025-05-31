@@ -18,6 +18,7 @@ export class ArticlesService {
   ) {}
 
   async create(createArticleDto: CreateArticleDto): Promise<Article> {
+    console.log("createArticleDto", createArticleDto)
     const createdArticle = new this.articleModel({
       ...createArticleDto,
       publishedAt: createArticleDto.status === 'published' ? new Date() : null,

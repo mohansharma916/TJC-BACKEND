@@ -16,6 +16,9 @@ export class User extends Document {
   fullName: string;
 
   @Prop()
+  role: string;
+
+  @Prop()
   phone: string;
 
   @Prop({ default: Date.now })

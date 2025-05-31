@@ -4,6 +4,7 @@ import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '../users/schema/user.schema';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { LoginUserDto } from './dto/login-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -42,11 +43,40 @@ export class AuthService {
     }
   }
 
-  async login(user: any) {
-    const payload = { username: user.username, sub: user._id };
+  async login(loginUserDto: LoginUserDto) {
+    // 1. Find user by username or email
+    const user = await this.usersService.findByUsernameOrEmail(loginUserDto.usernameOrEmail);
+    console.log("user",user)  
+   
+    if (!user) {
+      throw new UnauthorizedException('Invalid UserName Or Email');
+    }
+  
+    // 2. Verify password
+    const isPasswordValid = await bcrypt.compare(loginUserDto.password, user.passwordHash);
+    console.log("user",isPasswordValid)
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+  
+    
+    const payload = { 
+      username: user.username, 
+      sub: user.id,
+      role: user.role 
+    };
+  
     return {
-      access_token: this.jwtService.sign(payload,{secret:";H_@]pVb_vR&c,s%/E+t!gl>ku6Sui"}),
-      user,
+      access_token: this.jwtService.sign(payload, {
+        secret: "SecretKey", 
+        expiresIn: '1h'
+      }),
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email
+        
+      }
     };
   }
 
